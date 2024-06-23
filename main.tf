@@ -35,12 +35,9 @@ resource "google_compute_instance" "timesketch" {
     access_config {
         nat_ip = google_compute_address.static.address
     }
-    # TODO: apply firewall rule? 
   }
 
   # required to allow access to gcs bucket w/ artifacts
-  # TODO: make as a resource so it's only created when needed? 
-  # TODO: investigate scopes
   service_account {
     email  = var.service_account
     scopes = [ "https://www.googleapis.com/auth/cloud-platform"]
@@ -58,6 +55,4 @@ output "external_ip" {
 output "message" {
     value = "To view output of startup script, connect to your instance and run the following command: sudo journalctl -u google-startup-scripts.service"
 }
-
-# TODO: add startup script or user-data for docker (run install-tools.sh)
 
