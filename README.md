@@ -31,6 +31,7 @@ Here are final steps to follow before logging into Timesketch
 - Validate that you can reach the instance by inputting `http://<your_gce_external_ip>` into your browser. You should see the login page.
 - Create the first Timesketch user
     ```bash
+    cd /opt/timesketch
     sudo docker compose exec timesketch-web tsctl create-user <USERNAME>
     ```
 - (Optional) Configure the Timesketch CLI (useful for importing timelines from CLI). 
