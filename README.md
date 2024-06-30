@@ -2,16 +2,20 @@
 Terraformed Timesketch deployment in GCP for homelab/ quick proof of concept environments. 
 
 This Terraform template and accompanying startup script will:
-1. Create a GCE VM 
+1. Create a GCE VM w/ extra disk for more storage
 1. Install & run [Timesketch](https://timesketch.org/) collaborative timeline analysis application
 1. Install [Timesketch CLI tool](https://timesketch.org/guides/user/cli-client/) 
 1. Install [Plaso](https://plaso.readthedocs.io/en/latest/) tools such as [log2timeline.py](https://plaso.readthedocs.io/en/latest/sources/user/Using-log2timeline.html)
+1. Attach, format and mount disk to `/mnt/disks/data/`
+1. (Optionally) Copy data from GCS bucket to `~/data/` folder 
+
 
 ## Pre-reqs
 1. Ensure [Terraform](https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/install-cli) and [gcloud cli](https://cloud.google.com/sdk/docs/install) are installed and configured locally on the machine you are deploying from
 1. An existing GCP project
 1. A GCP service account with access to storage buckets within your project
 1. (Optional) A GCS bucket for artifact storage
+1. (Optional) Update the last line of `install-tools.sh` with your GCS bucket name that stores your forensic artifacts
 
 ### Assumptions
 - You have a GCP firewall rule in place to only allow your home IP to access GCE instances within project
