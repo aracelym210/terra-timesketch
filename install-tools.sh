@@ -48,3 +48,17 @@ echo | sudo add-apt-repository ppa:gift/stable
 sudo apt-get update -y
 sudo apt-get install plaso-tools -y
 echo "Done."
+
+# ---- format & mount attached disk ----
+# https://cloud.google.com/compute/docs/disks/format-mount-disk-linux#format_linux
+export device_name=$(ls -l /dev/disk/by-id/ | grep timesketch | head -n 1 | cut -d / -f3)
+echo $device_name
+sudo mkfs.ext4 -m 0 -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/$device_name
+
+sudo mkdir -p /mnt/disks/data
+sudo mount -o discard,defaults /dev/$device_name /mnt/disks/data
+sudo chmod a+w /mnt/disks/data
+
+# copy forensics data onto disk (use multithread)
+# replace $bucket with your bucket name and path/ files to copy to VM
+gsutil -m cp -r gs://$bucket /mnt/disks/data

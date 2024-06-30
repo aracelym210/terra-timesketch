@@ -19,6 +19,16 @@ resource "google_compute_address" "static" {
   region = var.region
 }
 
+resource "google_compute_disk" "default" {
+  name  = "timesketch-data"
+  type  = "pd-standard"
+  zone  = var.zone
+  labels = {
+    environment = "lab"
+  }
+  size = 256
+}
+
 resource "google_compute_instance" "timesketch" {
   name         = "timesketch"
   machine_type = var.machine_type
@@ -30,11 +40,20 @@ resource "google_compute_instance" "timesketch" {
     }
   }
 
+  attached_disk { 
+    source = google_compute_disk.default.id
+    device_name = google_compute_disk.default.name
+  }
+
   network_interface {
     network = var.network
     access_config {
         nat_ip = google_compute_address.static.address
     }
+  }
+
+  lifecycle {
+    ignore_changes = [attached_disk]
   }
 
   # required to allow access to gcs bucket w/ artifacts
@@ -55,4 +74,3 @@ output "external_ip" {
 output "message" {
     value = "To view output of startup script, connect to your instance and run the following command: sudo journalctl -u google-startup-scripts.service"
 }
-
